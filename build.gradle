@@ -25,7 +25,7 @@ task webjar(type: Jar) {
     }
 }
 
-if (project.frontendBuild) {
+if (!project.skipNpm) {
     check.dependsOn(test)
     jar.dependsOn(bundle)
 }
