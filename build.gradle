@@ -1,0 +1,32 @@
+plugins {
+    id "com.moowork.node" version "1.3.1"
+}
+
+apply plugin: 'java'
+apply plugin: 'com.moowork.node'
+sourceCompatibility = '11'
+
+task bundle(type: NpmTask, dependsOn: npmInstall) {
+    args = ['run', 'build']
+}
+
+task uiTest(type: NpmTask) {
+    environment = ['CI': 'true']
+    args = ['run', 'test']
+}
+
+task run(type: NpmTask) {
+    args = ['start']
+}
+
+task webjar(type: Jar) {
+    from(fileTree("build")) {
+        into "META-INF/resources"
+    }
+}
+
+if (project.frontendBuild) {
+    check.dependsOn(test)
+    jar.dependsOn(bundle)
+}
+jar.finalizedBy('webjar')
