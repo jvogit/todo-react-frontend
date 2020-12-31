@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import {
@@ -13,12 +13,17 @@ import { StatefulMenu } from "baseui/menu";
 import { Button, KIND } from "baseui/button";
 import { ChevronDown } from "baseui/icon";
 import { LOGOUT_REQUEST } from "utils/storeConsts";
+import LoginModal from "components/modals/LoginModal";
 
 export const LoginButton = () => {
+  const [isOpen, setIsOpen] = useState(false);
   return (
-    <Button>
-      Login
-    </Button>
+    <React.Fragment>
+      <Button onClick={() => setIsOpen(true)}>
+        Login
+      </Button>
+      <LoginModal isOpen={isOpen} setIsOpen={setIsOpen} />
+    </React.Fragment>
   );
 }
 
