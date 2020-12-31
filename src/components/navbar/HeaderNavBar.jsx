@@ -1,13 +1,17 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import {
   HeaderNavigation,
   StyledNavigationList,
   StyledNavigationItem,
   ALIGN,
 } from "baseui/header-navigation";
-import { Button } from "baseui/button";
+import { Avatar } from "baseui/avatar";
+import { StatefulPopover, PLACEMENT } from "baseui/popover";
+import { StatefulMenu } from "baseui/menu";
+import { Button, KIND } from "baseui/button";
+import { ChevronDown } from "baseui/icon";
 
 export const LoginButton = () => {
   return (
@@ -17,8 +21,56 @@ export const LoginButton = () => {
   );
 }
 
-export const ProfileButton = () => {
+export const ProfileButton = ({ user }) => {
+  const history = useHistory();
 
+  const ITEMS = [
+    {
+      label: "Todos",
+      action: () => {
+        history.push("/todos");
+      },
+    },
+    {
+      label: "Logout",
+      action: () => {
+        history.push("/");
+      },
+    },
+  ];
+
+  return (
+    <StatefulPopover
+      focusLock
+      placement={PLACEMENT.bottomRight}
+      content={({ close }) => (
+        <StatefulMenu
+          items={ITEMS}
+          onItemSelect={({ item }) => {
+            item.action();
+            close();
+          }}
+          overrides={{ List: { style: { width: '138px' } } }}
+        />
+      )}
+    >
+      <Button
+        type="button"
+        kind={KIND.minimal}
+        endEnhancer={ChevronDown}
+        $style={{
+          ":hover": {
+            backgroundColor: "transparent",
+          },
+          ":active": {
+            backgroundColor: "transparent",
+          },
+        }}
+      >
+        <Avatar name={"Joe Mama"} />
+      </Button>
+    </StatefulPopover>
+  );
 }
 
 export const HeaderNavBar = ({ user }) => {
@@ -41,7 +93,7 @@ export const HeaderNavBar = ({ user }) => {
       <StyledNavigationList $align={ALIGN.center}/>
       <StyledNavigationList $align={ALIGN.right}>
         <StyledNavigationItem>
-          <LoginButton />
+          {user ? <ProfileButton /> : <LoginButton />}
         </StyledNavigationItem>
       </StyledNavigationList>
     </HeaderNavigation>
