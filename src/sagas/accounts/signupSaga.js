@@ -2,7 +2,7 @@ import {
   takeEvery,
   call,
   put,
-} from "redux-saga";
+} from "redux-saga/effects";
 import { 
   SIGNUP_REQUEST,
   SENDING_REQUEST,
@@ -18,7 +18,7 @@ function* signup(history, { username, email, password }) {
     yield put({ type: SIGNUP_SUCCESS });
     yield call(history.push, "/login");
   } catch (error) {
-    yield put({ type: SIGNUP_FAILURE, error = error.response.data.message });
+    yield put({ type: SIGNUP_FAILURE, error: error.response.data.message });
   }
 }
 

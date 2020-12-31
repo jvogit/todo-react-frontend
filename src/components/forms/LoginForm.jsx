@@ -52,7 +52,8 @@ const LoginForm = ({ error, login }) => {
 
 const mapStateToProps = (state) => {
   return {
-
+    user: state.auth.user,
+    error: state.auth.error,
   };
 };
 

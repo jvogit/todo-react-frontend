@@ -3,7 +3,7 @@ import { Router, Route, Switch } from "react-router-dom";
 import Home from "pages/Home";
 import Login from "pages/Login";
 import Signup from "pages/Signup";
-import { HeaderNavBar } from "components/navbar/HeaderNavBar";
+import HeaderNavBar from "components/navbar/HeaderNavBar";
 
 export const App = ({ history }) => {
   return (

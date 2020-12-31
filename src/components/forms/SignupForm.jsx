@@ -3,9 +3,9 @@ import ValidatedFormInput from "components/forms/ValidatedFormInput";
 import { Button } from "baseui/button";
 import ErrorNotification from "components/notifications/ErrorNotification";
 import { connect } from "react-redux";
+import { SIGNUP_REQUEST } from "utils/storeConsts";
 
-const RegisterForm = () => {
-  const [error, setError] = useState(undefined);
+const RegisterForm = ({ error, signup }) => {
   const [username, setUsername] = useState(undefined);
   const [email, setEmail] = useState(undefined);
   const [password, setPassword] = useState(undefined);
@@ -13,6 +13,7 @@ const RegisterForm = () => {
 
   function onSubmit(e) {
     e.preventDefault();
+    signup(username, email, password);
   }
 
   return (
@@ -56,13 +57,13 @@ const RegisterForm = () => {
 
 const mapStateToProps = (state) => {
   return {
-
+    error: state.signup.error,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-
+    signup: (username, email, password) => dispatch({ type: SIGNUP_REQUEST, username, email, password })
   };
 };
 

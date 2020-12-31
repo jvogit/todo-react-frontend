@@ -12,6 +12,7 @@ import { StatefulPopover, PLACEMENT } from "baseui/popover";
 import { StatefulMenu } from "baseui/menu";
 import { Button, KIND } from "baseui/button";
 import { ChevronDown } from "baseui/icon";
+import { LOGOUT_REQUEST } from "utils/storeConsts";
 
 export const LoginButton = () => {
   return (
@@ -21,7 +22,7 @@ export const LoginButton = () => {
   );
 }
 
-export const ProfileButton = ({ user }) => {
+export const ProfileButton = ({ user, onLogout }) => {
   const history = useHistory();
 
   const ITEMS = [
@@ -34,7 +35,8 @@ export const ProfileButton = ({ user }) => {
     {
       label: "Logout",
       action: () => {
-        history.push("/");
+        onLogout();
+        window.location.reload();
       },
     },
   ];
@@ -67,13 +69,14 @@ export const ProfileButton = ({ user }) => {
           },
         }}
       >
-        <Avatar name={"Joe Mama"} />
+        <Avatar name={user.username} />
       </Button>
     </StatefulPopover>
   );
 }
 
-export const HeaderNavBar = ({ user }) => {
+const HeaderNavBar = ({ user, logout }) => {
+
   return (
     <HeaderNavigation
       $style={{
@@ -90,10 +93,10 @@ export const HeaderNavBar = ({ user }) => {
           </Link>
         </StyledNavigationItem>
       </StyledNavigationList>
-      <StyledNavigationList $align={ALIGN.center}/>
+      <StyledNavigationList $align={ALIGN.center} />
       <StyledNavigationList $align={ALIGN.right}>
         <StyledNavigationItem>
-          {user ? <ProfileButton /> : <LoginButton />}
+          {user ? <ProfileButton user={user} onLogout={logout} /> : <LoginButton />}
         </StyledNavigationItem>
       </StyledNavigationList>
     </HeaderNavigation>
@@ -106,4 +109,13 @@ const mapStateToProps = (state) => {
   };
 }
 
-export default connect(mapStateToProps)(HeaderNavBar);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    logout: () => dispatch({ type: LOGOUT_REQUEST }),
+  }
+}
+
+export default connect(
+  mapStateToProps, 
+  mapDispatchToProps
+)(HeaderNavBar);

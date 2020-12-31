@@ -2,7 +2,7 @@ import {
   takeEvery,
   call,
   put,
-} from "redux-saga";
+} from "redux-saga/effects";
 import { 
   SENDING_REQUEST,
   LOGIN_REQUEST,
@@ -14,12 +14,13 @@ import {
   TOKEN_VALIDATE,
 } from "utils/storeConsts";
 import AuthService from "services/AuthService";
+import { ACCESS_TOKEN } from "utils/appConsts";
 
 function* login(history, { username, password }) {
   try {
     yield put({ type: SENDING_REQUEST });
-    let response = yield call(AuthService.login, username, password);
-    yield put({ type: LOGIN_SUCCESS, user: response.user });
+    let { user } = yield call(AuthService.login, username, password);
+    yield put({ type: LOGIN_SUCCESS, user });
     yield call(history.push, "/todos");
   } catch (error) {
     yield put({ type: LOGIN_FAILURE, error: error.response.data.message });
@@ -35,10 +36,11 @@ function* logout(history) {
 
 function* tokenValidate(history) {
   try {
-    let user = yield call(AuthService.me);
+    let  { user } = yield call(AuthService.me);
     yield put({ type: LOGIN_SUCCESS, user });
   } catch (error) {
     if (error.response.status === 401) {
+      localStorage.removeItem(ACCESS_TOKEN);
       yield put({ type: LOGOUT_FAILURE, error: error.response.data.message });
       yield call(history.push, "/");
     }
