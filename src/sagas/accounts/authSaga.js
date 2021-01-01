@@ -36,14 +36,15 @@ function* logout(history) {
 
 function* tokenValidate(history) {
   try {
+    yield put({ type: SENDING_REQUEST });
     let  { user } = yield call(AuthService.me);
     yield put({ type: LOGIN_SUCCESS, user });
   } catch (error) {
     if (error.response.status === 401) {
       localStorage.removeItem(ACCESS_TOKEN);
-      yield put({ type: LOGOUT_FAILURE, error: error.response.data.message });
       yield call(history.push, "/");
     }
+    yield put({ type: LOGIN_FAILURE, error: error.response.data.message });
   }
 }
 
