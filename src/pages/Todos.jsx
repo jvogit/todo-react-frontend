@@ -1,65 +1,125 @@
 import CenterLayout from "components/layouts/CenterLayout";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Grid, Cell, ALIGNMENT } from 'baseui/layout-grid';
 import { ListItem, ListItemLabel } from "baseui/list";
+import { arrayMove, arrayRemove, List } from "baseui/dnd-list";
 import { connect } from "react-redux";
 import ProfileItem from "components/profile/ProfileItem";
-import { getWithToken } from "utils/Request";
-import { H1 } from "baseui/typography";
+import { getWithToken, postWithToken } from "utils/Request";
+import { H1, HeadingSmall } from "baseui/typography";
 import { Button } from "baseui/button";
 import {
   Checkbox,
   LABEL_PLACEMENT
 } from "baseui/checkbox";
+import { Spinner } from "baseui/spinner";
 
-const TodoList = () => {
-  const [data, setData] = useState({});
+const TodoList = ({ date = "2021-01-02" }) => {
+  const didMount = useRef(false);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState({ date, items: []});
 
   useEffect(() => {
     getWithToken("/api/todos", {
-      date: new Date().toLocaleDateString("en-CA"),
+      date,
     })
-    .then(response => {
-      console.log(response);
-      setData(response);
+    .then(res => {
+      let new_data = {
+        ...res.data,
+        items: res.data.items ? res.data.items.map((item) => <TodoItem {...item} />) : [],
+      };
+      setData(new_data);
     })
+    .finally(() => {
+      setLoading(false);
+    });
   }, []);
 
-  return (
-    <ul
-      style={{ padding: "0" }}
-    >
-      <TodoItem />
-      <TodoItem />
-      <TodoItem />
-      <TodoItem />
-    </ul>
-  )
-}
+  useEffect(() => {
+    if (!didMount.current) {
+      didMount.current = true;
+    } else if (!loading) {
+      postWithToken("/api/todos", {
+        date,
+        items: data.items.map(item => item.props),
+      })
+    }
+  }, [data]);
 
-const TodoItem = ({  }) => {
-  return (
-    <ListItem>
-        <div style={{
+  if (loading) {
+    return (
+      <div
+        style={{
           display: "flex",
           width: "100%",
           flexDirection: "row",
-          justifyContent: "space-between",
           alignItems: "center",
-        }}>
-          <Checkbox />
-          <div>
-            Test
-          </div>
-          <Button />
+          justifyContent: "center",
+        }}
+      >
+        <div style={{
+          paddingRight: "20px",
+        }}
+        >
+          <Spinner />
         </div>
-    </ListItem>
+        <HeadingSmall>Loading</HeadingSmall>
+      </div>
+    )
+  }
+
+  if (!Array.isArray(data.items) || !data.items.length) {
+    return (
+      <div
+        style={{
+          textAlign: "center",
+        }}
+      >
+        <HeadingSmall>No results</HeadingSmall>
+      </div>
+    );
+  }
+
+  return (
+    <List
+      items={data.items}
+      removable
+      onChange={({ oldIndex, newIndex }) => {
+        setData({
+          ...data,
+          items: newIndex == -1 
+            ? arrayRemove(data.items, oldIndex) 
+            : arrayMove(data.items, oldIndex, newIndex),
+        });
+      }}
+    />
+  )
+}
+
+const TodoItem = ({ completed, text, onChange }) => {
+  const [textState, setText] = useState(text);
+  const [completedState, setCompleted] = useState(completed);
+
+  return (
+    <div style={{
+      display: "flex",
+      width: "100%",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+    }}>
+      <Checkbox checked={completed} onChange={onChange} />
+      <div>
+        {text}
+      </div>
+      <Button />
+    </div>
   )
 }
 
 const Todos = ({ user, error, inProgress }) => {
 
-  if ( inProgress || error ) {
+  if (inProgress || error) {
     return null;
   }
 
@@ -76,7 +136,6 @@ const Todos = ({ user, error, inProgress }) => {
           }}>
             <div style={{
               textAlign: "center",
-              alignSelf: "center",
             }}>
               <H1>Todos</H1>
             </div>
