@@ -2,24 +2,22 @@ import axios from "axios";
 import { ACCESS_TOKEN } from "utils/appConsts";
 
 export async function postWithToken(url, data) {
-  let config = {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`,
-    }
-  };
-
-  return axios.post(url, data, config);
+  return requestWithToken("POST", url, { data });
 }
 
 export async function getWithToken(url, params) {
-  let config = {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`
-    },
-    params,
-  };
+  return requestWithToken("GET", url, { params });
+}
 
-  return axios.get(url, config);
+export async function requestWithToken(method, url, config) {
+  return axios.request({
+    method,
+    url,
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`,
+    },
+    ...config
+  });
 }
 
 export default axios;
