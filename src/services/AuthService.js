@@ -6,7 +6,7 @@ import {
 } from "utils/appConsts";
 
 export const login = async (username, password) => {
-  return axios.post("/api/accounts/login", {
+  return axios.post("/api/account/login", {
     username,
     password,
   })
@@ -22,7 +22,7 @@ export const logout = () => {
 }
 
 export const me = async () => {
-  return getWithToken("/api/accounts/me")
+  return getWithToken("/api/account/me")
   .then(response => response.data);
 }
 

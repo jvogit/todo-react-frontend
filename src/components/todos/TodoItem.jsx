@@ -7,7 +7,7 @@ import { Input } from "baseui/input";
 import { Button, KIND, SHAPE, SIZE } from "baseui/button";
 import { Check, ChevronLeft } from "baseui/icon";
 
-const TodoItem = ({ id, completed, text, onUpdate }) => {
+const TodoItem = ({ id, completed, text }) => {
   const [textState, setTextState] = useState(text);
   const [completedState, setCompletedState] = useState(completed);
   const inputRef = useRef(null);
@@ -27,14 +27,15 @@ const TodoItem = ({ id, completed, text, onUpdate }) => {
   const doUpdates = ({ text = textState, completed = completedState }) => {
     setTextState(text);
     setCompletedState(completed);
-    onUpdate({ id, text, completed });
-    requestWithToken("PUT", "/api/todos/items", {
-      data: {
-        id,
-        text,
-        completed,
-      }
-    });
+    requestWithToken(
+      "PUT",
+      `/api/todo/item/${id}`,
+      {
+        data: {
+          text,
+          completed,
+        }
+      });
   };
 
   return (
@@ -61,7 +62,7 @@ const TodoItem = ({ id, completed, text, onUpdate }) => {
       >
         {!editing
           ? textState
-          : <Input inputRef={inputRef} value={textState} onChange={(e) => setTextState(e.target.value)}/>
+          : <Input inputRef={inputRef} value={textState} onChange={(e) => setTextState(e.target.value)} />
         }
       </div>
       <div>

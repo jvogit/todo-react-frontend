@@ -8,13 +8,16 @@ import TodoItem from "./TodoItem";
 const TodoList = ({ date = "2021-01-01" }) => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({ date, items: [] });
-  
+
   useEffect(() => {
-    getWithToken("/api/todos", {
+    getWithToken("/api/todo", {
       date,
     })
       .then(res => {
-        setData(res.data)
+        setData({
+          ...res.data,
+          items: mapToComponent(res.data.items),
+        })
       })
       .finally(() => {
         setLoading(false);
@@ -23,33 +26,28 @@ const TodoList = ({ date = "2021-01-01" }) => {
 
   const mapToComponent = (items) => {
     return items.map((item, index) => {
-      return <TodoItem {...item} onUpdate={({ text, completed }) => {
-        setData(prev_data => {
-          let items = prev_data.items;
-          items[index].text = text;
-          items[index].completed = completed;
-
-          return {
-            ...prev_data,
-            items,
-          }
-        })
-      }} />
+      return <TodoItem {...item} />
     })
   }
 
   const moveAndUpdate = (items, old_index, new_index) => {
-    requestWithToken(new_index === -1 ? "DELETE" : "PUT", "/api/todos/items", {
-      data: {
-        ...items[old_index],
-        index: new_index,
-      }
-    });
+    let id = items[old_index].props.id;
+    requestWithToken(
+      new_index === -1
+        ? "DELETE"
+        : "PUT",
+      `/api/todo/item/${id}/index`,
+      {
+        data: {
+          index: new_index,
+        }
+      });
+
     let new_array = new_index === -1
       ? arrayRemove(items, old_index, new_index)
       : arrayMove(items, old_index, new_index);
 
-    return new_array.map((item, index) => ({ ...item, index }));
+    return new_array;
   }
 
   if (loading) {
@@ -88,7 +86,7 @@ const TodoList = ({ date = "2021-01-01" }) => {
 
   return (
     <List
-      items={mapToComponent(data.items)}
+      items={data.items}
       removable
       onChange={({ oldIndex, newIndex }) => {
         console.log(oldIndex + " " + newIndex);
