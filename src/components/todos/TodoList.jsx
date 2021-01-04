@@ -8,7 +8,7 @@ import TodoItem from "./TodoItem";
 const TodoList = ({ date = "2021-01-01" }) => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({ date, items: [] });
-  const [items, setItems] = useState({ items: [] });
+  
   useEffect(() => {
     getWithToken("/api/todos", {
       date,
