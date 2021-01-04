@@ -1,33 +1,43 @@
 import React, { useState, useEffect, } from "react";
 import { arrayMove, arrayRemove, List } from "baseui/dnd-list";
-import { deleteWithToken, getWithToken, requestWithToken } from "utils/Request";
+import { getWithToken, postWithToken, requestWithToken } from "utils/Request";
 import { HeadingSmall } from "baseui/typography";
-import { Spinner } from "baseui/spinner";
+import { StyledSpinnerNext as Spinner } from "baseui/spinner";
 import TodoItem from "./TodoItem";
+import { Button, KIND } from "baseui/button";
+import { Plus } from "baseui/icon";
 
 const TodoList = ({ date = "2021-01-01" }) => {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState({ date, items: [] });
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
     getWithToken("/api/todo", {
       date,
     })
       .then(res => {
-        setData({
-          ...res.data,
-          items: mapToComponent(res.data.items),
-        })
+        setItems(mapToComponent(res.data.items));
       })
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [date]);
 
   const mapToComponent = (items) => {
-    return items.map((item, index) => {
+    return items.map((item) => {
       return <TodoItem {...item} />
     })
+  }
+
+  const addItem = () => {
+    postWithToken("/api/todo/item", {
+      date,
+      text: "Add a TODO",
+      completed: false,
+    })
+    .then(res => {
+      setItems(prev => [...prev, <TodoItem {...res.data} />]);
+    });
   }
 
   const moveAndUpdate = (items, old_index, new_index) => {
@@ -72,30 +82,25 @@ const TodoList = ({ date = "2021-01-01" }) => {
     )
   }
 
-  if (!Array.isArray(data.items) || !data.items.length) {
-    return (
-      <div
-        style={{
-          textAlign: "center",
-        }}
-      >
-        <HeadingSmall>No results</HeadingSmall>
-      </div>
-    );
-  }
-
   return (
-    <List
-      items={data.items}
-      removable
-      onChange={({ oldIndex, newIndex }) => {
-        console.log(oldIndex + " " + newIndex);
-        setData({
-          ...data,
-          items: moveAndUpdate(data.items, oldIndex, newIndex),
-        });
-      }}
-    />
+    <React.Fragment>
+      <List
+        items={items}
+        removable
+        onChange={({ oldIndex, newIndex }) => {
+          setItems(moveAndUpdate(items, oldIndex, newIndex));
+        }}
+      />
+      <Button 
+        $style={{
+          width: "100%",
+        }}
+        kind={KIND.minimal}
+        onClick={addItem}
+      >
+        <Plus /> {"Add an item"}
+      </Button>
+    </React.Fragment>
   )
 }
 

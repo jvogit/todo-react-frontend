@@ -26,8 +26,10 @@ export const me = async () => {
   .then(response => response.data);
 }
 
-export default {
+const AuthService = {
   login,
   logout,
   me,
-};
+}
+
+export default AuthService;

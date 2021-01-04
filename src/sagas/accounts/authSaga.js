@@ -10,7 +10,6 @@ import {
   LOGIN_SUCCESS,
   LOGOUT_REQUEST,
   LOGOUT_SUCCESS,
-  LOGOUT_FAILURE,
   TOKEN_VALIDATE,
 } from "utils/storeConsts";
 import AuthService from "services/AuthService";

@@ -9,7 +9,7 @@ import {
   SIGNUP_SUCCESS,
   SIGNUP_FAILURE,
 } from "utils/storeConsts";
-import AccountsService from "services/AccountsService";
+import AccountsService from "services/AccountService";
 
 function* signup(history, { username, email, password }) {
   try {

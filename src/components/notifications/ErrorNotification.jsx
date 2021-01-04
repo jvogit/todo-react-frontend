@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Notification, KIND } from 'baseui/notification';
 
 export const ErrorNotification = ({ errorMessage }) => {

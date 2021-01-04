@@ -21,7 +21,7 @@ function Negative() {
 }
 
 
-export default ({ label, onValidate = () => true, onChange = () => { }, errorMessage, type }) => {
+const ValidatedFormInput = ({ label, onValidate = () => true, onChange = () => { }, errorMessage, type }) => {
   const [error, setError] = useState(false);
   const [visited, setVisited] = useState(false);
   const isInvalid = visited && error;
@@ -49,3 +49,5 @@ export default ({ label, onValidate = () => true, onChange = () => { }, errorMes
     </FormControl>
   );
 }
+
+export default ValidatedFormInput;

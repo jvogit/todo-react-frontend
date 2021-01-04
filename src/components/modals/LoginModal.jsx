@@ -1,18 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Modal,
   ModalHeader,
   ModalBody,
   ModalFooter,
-  ModalButton,
   SIZE,
   ROLE
 } from "baseui/modal";
-import { Button, KIND as ButtonKind } from "baseui/button";
+import { Button, } from "baseui/button";
 import LoginForm from "components/forms/LoginForm";
 import { useHistory } from "react-router-dom";
 
-export default ({ isOpen, setIsOpen }) => {
+const LoginModal = ({ isOpen, setIsOpen }) => {
   const history = useHistory();
 
   return (
@@ -45,3 +44,5 @@ export default ({ isOpen, setIsOpen }) => {
     </Modal>
   );
 }
+
+export default LoginModal;

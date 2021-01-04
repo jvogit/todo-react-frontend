@@ -9,7 +9,6 @@ const RegisterForm = ({ error, signup }) => {
   const [username, setUsername] = useState(undefined);
   const [email, setEmail] = useState(undefined);
   const [password, setPassword] = useState(undefined);
-  const [_, setCPassword] = useState(undefined);
 
   function onSubmit(e) {
     e.preventDefault();
@@ -35,7 +34,6 @@ const RegisterForm = ({ error, signup }) => {
       <ValidatedFormInput
         label="Confirm Password"
         type="password"
-        onChange={setCPassword}
         onValidate={(value) => value === password}
         errorMessage={"Passwords do not match!"}
       />

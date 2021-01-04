@@ -1,6 +1,4 @@
-import axios, {
-  getWithToken
-} from "utils/Request";
+import axios from "utils/Request";
 
 export const signup = async (username, email, password) => {
   return axios.post("/api/account/signup", {
@@ -11,6 +9,8 @@ export const signup = async (username, email, password) => {
   .then(response => response.data);
 }
 
-export default {
+const AccountService = {
   signup,
-};
+}
+
+export default AccountService;
