@@ -25,8 +25,6 @@ task webjar(type: Jar) {
     }
 }
 
-if (!project.skipNpm) {
-    check.dependsOn(test)
-    jar.dependsOn(bundle)
-}
+check.dependsOn(test)
+jar.dependsOn(bundle)
 jar.finalizedBy('webjar')
