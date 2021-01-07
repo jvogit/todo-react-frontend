@@ -25,7 +25,7 @@ const TodoList = ({ date = "2021-01-01" }) => {
 
   const mapToComponent = (items) => {
     return items.map((item) => {
-      return <TodoItem key={item.index} {...item} onUpdate={(text, completed) => {
+      return <TodoItem key={item.id} {...item} onUpdate={(text, completed) => {
         setItems(prev_arr => {
           prev_arr[item.index].text = text;
           prev_arr[item.index].completed = completed;
@@ -43,7 +43,7 @@ const TodoList = ({ date = "2021-01-01" }) => {
       completed: false,
     })
       .then(res => {
-        setItems(prev => [...prev, res.data]);
+        setItems(prev => ([...prev, res.data]));
       });
   }
 
@@ -64,7 +64,7 @@ const TodoList = ({ date = "2021-01-01" }) => {
       ? arrayRemove(items, old_index, new_index)
       : arrayMove(items, old_index, new_index);
 
-    return new_array;
+    return new_array.map((item, index) => ({...item, index}));
   }
 
   if (loading) {
