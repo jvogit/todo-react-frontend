@@ -7,16 +7,11 @@ import { Input } from "baseui/input";
 import { Button, KIND, SHAPE, SIZE } from "baseui/button";
 import { Check, ChevronLeft } from "baseui/icon";
 
-const TodoItem = ({ id, completed, text }) => {
+const TodoItem = ({ id, completed, text, onUpdate = () => {} }) => {
   const [textState, setTextState] = useState(text);
   const [completedState, setCompletedState] = useState(completed);
   const inputRef = useRef(null);
   const [editing, setEditing] = useState(false);
-
-  useEffect(() => {
-    setTextState(text);
-    setCompletedState(completed);
-  }, [completed, text]);
 
   useEffect(() => {
     if (editing) {
@@ -27,6 +22,7 @@ const TodoItem = ({ id, completed, text }) => {
   const doUpdates = ({ text = textState, completed = completedState }) => {
     setTextState(text);
     setCompletedState(completed);
+    onUpdate(text, completed);
     requestWithToken(
       "PUT",
       `/api/todo/item/${id}`,

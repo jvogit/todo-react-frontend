@@ -16,7 +16,7 @@ const TodoList = ({ date = "2021-01-01" }) => {
       date,
     })
       .then(res => {
-        setItems(mapToComponent(res.data.items));
+        setItems(res.data.items);
       })
       .finally(() => {
         setLoading(false);
@@ -25,7 +25,14 @@ const TodoList = ({ date = "2021-01-01" }) => {
 
   const mapToComponent = (items) => {
     return items.map((item) => {
-      return <TodoItem {...item} />
+      return <TodoItem key={item.index} {...item} onUpdate={(text, completed) => {
+        setItems(prev_arr => {
+          prev_arr[item.index].text = text;
+          prev_arr[item.index].completed = completed;
+
+          return prev_arr;
+        });
+      }} />
     })
   }
 
@@ -35,13 +42,13 @@ const TodoList = ({ date = "2021-01-01" }) => {
       text: "Add a TODO",
       completed: false,
     })
-    .then(res => {
-      setItems(prev => [...prev, <TodoItem {...res.data} />]);
-    });
+      .then(res => {
+        setItems(prev => [...prev, res.data]);
+      });
   }
 
   const moveAndUpdate = (items, old_index, new_index) => {
-    let id = items[old_index].props.id;
+    let id = items[old_index].id;
     requestWithToken(
       new_index === -1
         ? "DELETE"
@@ -85,13 +92,13 @@ const TodoList = ({ date = "2021-01-01" }) => {
   return (
     <React.Fragment>
       <List
-        items={items}
+        items={mapToComponent(items)}
         removable
         onChange={({ oldIndex, newIndex }) => {
           setItems(moveAndUpdate(items, oldIndex, newIndex));
         }}
       />
-      <Button 
+      <Button
         $style={{
           width: "100%",
         }}
