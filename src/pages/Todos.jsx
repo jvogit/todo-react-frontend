@@ -5,9 +5,11 @@ import ProfileItem from "components/profile/ProfileItem";
 import { HeadingSmall, } from "baseui/typography";
 import TodoList from "components/todos/TodoList";
 import { Button, KIND } from "baseui/button";
+import { formatDate } from "utils/utils.js";
 
 const Todos = ({ user, error, inProgress }) => {
   const [editing, setEditing] = useState(false);
+  const date = formatDate(new Date());
 
   if (inProgress || error) {
     return null;
@@ -29,16 +31,16 @@ const Todos = ({ user, error, inProgress }) => {
             justifyContent: "space-between",
             alignItems: "center",
           }}>
-            <HeadingSmall>01-01-2021 TODO</HeadingSmall>
+            <HeadingSmall>{date}</HeadingSmall>
             <Button 
               kind={KIND.minimal}
               onClick={() => setEditing(!editing)}
             >
-              Edit
+              {editing ? "Done" : "Edit"}
             </Button>
           </div>
           <div>
-            <TodoList editing={editing} />
+            <TodoList date={date} editing={editing} />
           </div>
         </div>
       </Cell>
