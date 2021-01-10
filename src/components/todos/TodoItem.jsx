@@ -36,10 +36,10 @@ const TodoItem = ({ id, completed, text, editing = false, onUpdate = () => {} })
           paddingRight: "10px",
         }}
       >
-        <Checkbox checked={completedState} onChange={(e) => {
+        {!editing && <Checkbox checked={completedState} onChange={(e) => {
           setCompletedState(e.target.checked);
           doUpdates({ completed: e.target.checked });
-        }} />
+        }} />}
       </div>
       <div
         style={{
@@ -47,7 +47,7 @@ const TodoItem = ({ id, completed, text, editing = false, onUpdate = () => {} })
         }}
       >
         {!editing
-          ? textState
+          ? <div style={{ textDecoration: completedState ? "line-through" : null }}>{textState}</div>
           : <Input value={textState} onChange={(e) => setTextState(e.target.value)} onBlur={() => doUpdates()} />
         }
       </div>
