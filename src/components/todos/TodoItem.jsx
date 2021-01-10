@@ -1,25 +1,15 @@
-import React, { useState, useEffect, useRef, } from "react";
+import React, { useState, } from "react";
 import {
   Checkbox
 } from "baseui/checkbox";
 import { requestWithToken } from "utils/Request";
 import { Input } from "baseui/input";
-import { Button, KIND, SHAPE, SIZE } from "baseui/button";
-import { Check, ChevronLeft } from "baseui/icon";
 
-const TodoItem = ({ id, completed, text, onUpdate = () => {} }) => {
+const TodoItem = ({ id, completed, text, editing = false, onUpdate = () => {} }) => {
   const [textState, setTextState] = useState(text);
   const [completedState, setCompletedState] = useState(completed);
-  const inputRef = useRef(null);
-  const [editing, setEditing] = useState(false);
 
-  useEffect(() => {
-    if (editing) {
-      inputRef.current.focus();
-    }
-  }, [editing]);
-
-  const doUpdates = ({ text = textState, completed = completedState }) => {
+  const doUpdates = ({ text = textState, completed = completedState } = {}) => {
     setTextState(text);
     setCompletedState(completed);
     onUpdate(text, completed);
@@ -58,23 +48,8 @@ const TodoItem = ({ id, completed, text, onUpdate = () => {} }) => {
       >
         {!editing
           ? textState
-          : <Input inputRef={inputRef} value={textState} onChange={(e) => setTextState(e.target.value)} />
+          : <Input value={textState} onChange={(e) => setTextState(e.target.value)} onBlur={() => doUpdates()} />
         }
-      </div>
-      <div>
-        <Button
-          kind={KIND.minimal}
-          shape={SHAPE.circle}
-          size={SIZE.mini}
-          onClick={() => {
-            if (editing) {
-              doUpdates({});
-            }
-            setEditing(!editing);
-          }}
-        >
-          {!editing ? <ChevronLeft /> : <Check />}
-        </Button>
       </div>
     </div>
   )

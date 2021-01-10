@@ -26,7 +26,7 @@ const TodoList = ({ date = "2021-01-01", editing = false }) => {
 
   const mapToComponent = (items) => {
     return items.map((item) => {
-      return <TodoItem key={item.id} {...item} onUpdate={(text, completed) => {
+      return <TodoItem key={item.id} editing={editing} {...item} onUpdate={(text, completed) => {
         setItems(prev_arr => {
           prev_arr[item.index].text = text;
           prev_arr[item.index].completed = completed;
