@@ -4,6 +4,7 @@ import {
 } from "baseui/checkbox";
 import { requestWithToken } from "utils/Request";
 import { Input } from "baseui/input";
+import { Paragraph2 } from "baseui/typography";
 
 const TodoItem = ({ id, completed, text, editing = false, onUpdate = () => {} }) => {
   const [textState, setTextState] = useState(text);
@@ -47,7 +48,7 @@ const TodoItem = ({ id, completed, text, editing = false, onUpdate = () => {} })
         }}
       >
         {!editing
-          ? <div style={{ textDecoration: completedState ? "line-through" : null }}>{textState}</div>
+          ? <Paragraph2 $style={{ textDecoration: completedState ? "line-through" : null }} >{textState}</Paragraph2>
           : <Input value={textState} onChange={(e) => setTextState(e.target.value)} onBlur={() => doUpdates()} />
         }
       </div>

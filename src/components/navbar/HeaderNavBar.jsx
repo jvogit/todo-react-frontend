@@ -10,10 +10,11 @@ import {
 import { Avatar } from "baseui/avatar";
 import { StatefulPopover, PLACEMENT } from "baseui/popover";
 import { StatefulMenu } from "baseui/menu";
-import { Button, KIND } from "baseui/button";
-import { ChevronDown } from "baseui/icon";
+import { Button, KIND, SIZE } from "baseui/button";
+import { CheckIndeterminate, ChevronDown } from "baseui/icon";
 import { LOGOUT_REQUEST } from "utils/storeConsts";
 import LoginModal from "components/modals/LoginModal";
+import { HeadingXSmall } from "baseui/typography";
 
 export const LoginButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -80,7 +81,7 @@ export const ProfileButton = ({ user, onLogout }) => {
   );
 }
 
-const HeaderNavBar = ({ user, logout }) => {
+const HeaderNavBar = ({ user, logout, toggleTheme }) => {
 
   return (
     <HeaderNavigation
@@ -89,17 +90,27 @@ const HeaderNavBar = ({ user, logout }) => {
         paddingBottom: "0px",
         paddingLeft: "12%",
         paddingRight: "12%",
+        height: "60px",
       }}
     >
       <StyledNavigationList $align={ALIGN.left}>
         <StyledNavigationItem>
           <Link to="/" style={{ textDecoration: "inherit", color: "inherit", }}>
-            <h1>TODO</h1>
+            <HeadingXSmall $style={{ margin: "0" }} >TODO</HeadingXSmall>
           </Link>
         </StyledNavigationItem>
       </StyledNavigationList>
       <StyledNavigationList $align={ALIGN.center} />
       <StyledNavigationList $align={ALIGN.right}>
+        <StyledNavigationItem>
+          <Button
+            kind={KIND.minimal}
+            size={SIZE.mini}
+            onClick={toggleTheme}
+          >
+            <CheckIndeterminate />
+          </Button>
+        </StyledNavigationItem>
         <StyledNavigationItem>
           {user ? <ProfileButton user={user} onLogout={logout} /> : <LoginButton />}
         </StyledNavigationItem>
