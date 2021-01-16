@@ -11,10 +11,12 @@ import { Avatar } from "baseui/avatar";
 import { StatefulPopover, PLACEMENT } from "baseui/popover";
 import { StatefulMenu } from "baseui/menu";
 import { Button, KIND, SIZE } from "baseui/button";
-import { CheckIndeterminate, ChevronDown } from "baseui/icon";
+import { ChevronDown } from "baseui/icon";
 import { LOGOUT_REQUEST } from "utils/storeConsts";
 import LoginModal from "components/modals/LoginModal";
 import { HeadingXSmall } from "baseui/typography";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLightbulb } from "@fortawesome/free-solid-svg-icons";
 
 export const LoginButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -105,10 +107,10 @@ const HeaderNavBar = ({ user, logout, toggleTheme }) => {
         <StyledNavigationItem>
           <Button
             kind={KIND.minimal}
-            size={SIZE.mini}
+            size={SIZE.compact}
             onClick={toggleTheme}
           >
-            <CheckIndeterminate />
+            <FontAwesomeIcon icon={faLightbulb} />
           </Button>
         </StyledNavigationItem>
         <StyledNavigationItem>

@@ -10,6 +10,7 @@ import HeaderNavBar from "components/navbar/HeaderNavBar";
 import AuthorizedRoute from "components/routes/AuthorizedRoute";
 import Todos from "pages/Todos";
 import { DARK_THEME } from "utils/appConsts";
+import Footer from "./layouts/FooterLayout";
 
 const engine = new Styletron();
 
@@ -33,6 +34,7 @@ export const App = ({ history }) => {
             <Route path="/signup" exact component={Signup} />
             <AuthorizedRoute path="/todos" exact component={Todos} />
           </Switch>
+          <Footer />
         </Router>
       </BaseProvider>
     </StyletronProvider>
