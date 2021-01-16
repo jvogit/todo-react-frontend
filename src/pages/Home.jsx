@@ -16,7 +16,8 @@ export const Home = () => {
     >
       <div
         style={{
-          padding: "60px",
+          paddingTop: "60px",
+          paddingBottom: "60px",
         }}
       >
         <Grid
